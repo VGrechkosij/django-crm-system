@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, Client
 
 
 @admin.register(User)
@@ -50,3 +50,37 @@ class CustomUserAdmin(UserAdmin):
     )
 
     ordering = ("username",)
+
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = (
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "company",
+        "manager",
+        "created_at",
+        "updated_at"
+    )
+
+    search_fields = (
+        "first_name",
+        "last_name",
+        "email",
+        "phone",
+        "company",
+        "manager__username",
+        "manager__email",
+    )
+
+    list_filter = (
+        "created_at",
+        "updated_at",
+        "manager"
+    )
+
+    ordering = (
+        "-created_at",
+    )
