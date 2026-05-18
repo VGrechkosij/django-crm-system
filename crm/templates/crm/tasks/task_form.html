@@ -1,0 +1,16 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>
+        {% if object %} Update task {% else %} Create task {% endif %}
+    </h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Save</button>
+    </form>
+
+    <a href="{% url 'crm:task-list' %}">Cancel</a>
+{% endblock %}

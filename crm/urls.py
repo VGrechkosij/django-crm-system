@@ -7,6 +7,11 @@ from .views import (
     ClientUpdateView,
     ClientCreateView,
     ClientDeleteView,
+    TaskListView,
+    TaskCreateView,
+    TaskDetailView,
+    TaskUpdateView,
+    TaskDeleteView,
 )
 
 
@@ -19,4 +24,9 @@ urlpatterns = [
     path("clients/<int:pk>/", ClientDetailView.as_view(), name="client-detail"),
     path("clients/<int:pk>/update/", ClientUpdateView.as_view(), name="client-update"),
     path("clients/<int:pk>/delete/", ClientDeleteView.as_view(), name="client-delete"),
+    path("tasks/", TaskListView.as_view(), name="task-list"),
+    path("tasks/create/", TaskCreateView.as_view(), name="task-create"),
+    path("tasks/<int:pk>/", TaskDetailView.as_view(), name="task-detail"),
+    path("tasks/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
+    path("tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
 ]

@@ -1,9 +1,9 @@
 {% extends "crm/base.html" %}
 
 {% block content %}
-    <h1>Delete client</h1>
+    <h1>Delete task</h1>
 
-    <p>Are you sure you want to delete {{ client }}?</p>
+    <p>Are you sure you want to delete {{ task }}?</p>
 
     <form method="post">
         {% csrf_token %}
@@ -11,5 +11,5 @@
         <button type="submit">Delete</button>
     </form>
 
-    <a href="{% url 'crm:client-detail' pk=client.pk %}">Cancel</a>
+    <a href="{% url 'crm:task-detail' pk=task.pk %}">Cancel</a>
 {% endblock %}

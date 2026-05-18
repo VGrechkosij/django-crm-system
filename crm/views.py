@@ -10,7 +10,8 @@ from django.views.generic import (
 )
 
 from .forms.search_form import SearchForm
-from .models import Client
+from .forms.task_forms import TaskForm
+from .models import Client, Task
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -70,3 +71,58 @@ class ClientDeleteView(DeleteView):
     template_name = "crm/clients/client_confirm_delete.html"
     context_object_name = "client"
     success_url = reverse_lazy("crm:client-list")
+
+
+class TaskListView(ListView):
+    model = Task
+    template_name = "crm/tasks/task_list.html"
+    context_object_name = "tasks"
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        form = SearchForm(self.request.GET)
+
+        if form.is_valid():
+            query = form.cleaned_data["q"]
+            if query:
+                queryset = queryset.filter(assigned_to__username__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = SearchForm(self.request.GET)
+        return context
+
+
+class TaskCreateView(CreateView):
+    model = Task
+    template_name = "crm/tasks/task_form.html"
+    context_object_name = "task"
+    form_class = TaskForm
+    success_url = reverse_lazy("crm:task-list")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "crm/tasks/task_detail.html"
+    context_object_name = "task"
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    template_name = "crm/tasks/task_form.html"
+    context_object_name = "task"
+    form_class = TaskForm
+    success_url = reverse_lazy("crm:task-list")
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = "crm/tasks/task_confirm_delete.html"
+    context_object_name = "task"
+    success_url = reverse_lazy("crm:task-list")
