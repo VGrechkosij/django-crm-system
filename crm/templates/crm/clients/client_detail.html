@@ -1,0 +1,18 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Detail Client</h1>
+    <ul>
+        <li>First name - {{ client.first_name }}</li>
+        <li>Last name - {{ client.last_name }}</li>
+        <li>Email - {{ client.email }}</li>
+        <li>Phone - {{ client.phone }}</li>
+        <li>Company - {{ client.company }}</li>
+        <li>Manager - {{ client.manager.username }}</li>
+        <li>Created at - {{ client.created_at }}</li>
+        <li>Updated at - {{ client.updated_at }}</li>
+    </ul>
+    <a href="{% url 'crm:client-update' pk=client.pk %}">Update</a>
+    <a href="{% url 'crm:client-delete' pk=client.pk %}">Delete</a>
+    <a href="{% url 'crm:client-list' %}">Back to clients</a>
+{% endblock %}

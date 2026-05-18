@@ -1,0 +1,42 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Clients</h1>
+
+    <form method="get">
+        {{ search_form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Manager</th>
+        </tr>
+
+        {% for client in clients %}
+            <tr>
+                <td>
+                    <a href="{% url 'crm:client-detail' pk=client.pk %}">
+                        {{ client.pk }}
+                    </a>
+                </td>
+                <td>{{ client.first_name }}</td>
+                <td>{{ client.last_name }}</td>
+                <td>{{ client.manager.username }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No clients found</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'crm:client-create' %}">Create client</a>
+
+    <br>
+
+    {% include "crm/includes/pagination.html" %}
+{% endblock %}

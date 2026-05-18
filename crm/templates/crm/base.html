@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Django CRM System{% endblock %}</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'crm:index' %}">Home</a>
+            <a href="{% url 'crm:client-list' %}">Clients</a>
+            <a href="{% url 'crm:client-create' %}">Create client</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        Footer
+    </footer>
+</body>
+</html>

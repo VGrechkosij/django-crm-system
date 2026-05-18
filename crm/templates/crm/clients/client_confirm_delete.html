@@ -1,0 +1,15 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Delete client</h1>
+
+    <p>Are you sure you want to delete {{ client }}?</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button type="submit">Delete</button>
+    </form>
+
+    <a href="{% url 'crm:client-detail' pk=client.id %}">Cancel</a>
+{% endblock %}
