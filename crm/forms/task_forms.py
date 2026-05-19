@@ -1,15 +1,10 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
 from crm.models import Task
 
 
-class TaskSearchForm(forms.Form):
-    q = forms.CharField(
-        max_length=255,
-        required=False,
-        label="Search",
-        widget=forms.TextInput(attrs={"placeholder": "Search"})
-    )
+User = get_user_model()
 
 
 class TaskForm(forms.ModelForm):
@@ -30,3 +25,28 @@ class TaskForm(forms.ModelForm):
                 format="%Y-%m-%d",
             ),
         }
+
+
+class TaskSearchForm(forms.Form):
+    q = forms.CharField(
+        max_length=255,
+        required=False,
+        label="Search",
+        widget=forms.TextInput(attrs={"placeholder": "Search"})
+    )
+
+
+class TaskFilterForm(forms.Form):
+    status = forms.ChoiceField(
+        choices=[("", "All statuses")] + list(Task.Status.choices),
+        required=False,
+    )
+    priority = forms.ChoiceField(
+        choices=[("", "All priorities")] + list(Task.Priority.choices),
+        required=False
+    )
+    assigned_to = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        empty_label="All assignees",
+    )

@@ -10,7 +10,7 @@ from django.views.generic import (
 )
 
 from .forms.client_forms import ClientSearchForm
-from .forms.task_forms import TaskForm, TaskSearchForm
+from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
 from .models import Client, Task
 
 
@@ -22,7 +22,7 @@ class ClientListView(ListView):
     model = Client
     template_name = "crm/clients/client_list.html"
     context_object_name = "clients"
-    paginate_by = 5
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -37,6 +37,11 @@ class ClientListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["search_form"] = ClientSearchForm(self.request.GET)
+
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["query_params"] = query_params.urlencode()
+
         return context
 
 
@@ -81,17 +86,40 @@ class TaskListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        form = TaskSearchForm(self.request.GET)
+        search_form = TaskSearchForm(self.request.GET)
+        filter_form = TaskFilterForm(self.request.GET)
 
-        if form.is_valid():
-            query = form.cleaned_data["q"]
+        if search_form.is_valid():
+            query = search_form.cleaned_data["q"]
+
             if query:
                 queryset = queryset.filter(assigned_to__username__icontains=query)
+
+        if filter_form.is_valid():
+            status = filter_form.cleaned_data["status"]
+            priority = filter_form.cleaned_data["priority"]
+            assigned_to = filter_form.cleaned_data["assigned_to"]
+
+            if status:
+                queryset = queryset.filter(status=status)
+
+            if priority:
+                queryset = queryset.filter(priority=priority)
+
+            if assigned_to:
+                queryset = queryset.filter(assigned_to=assigned_to)
+
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["search_form"] = TaskSearchForm(self.request.GET)
+        context["filter_form"] = TaskFilterForm(self.request.GET)
+
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["query_params"] = query_params.urlencode()
+
         return context
 
 
