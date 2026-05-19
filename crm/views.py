@@ -1,7 +1,8 @@
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.views.generic import (
+    FormView,
     CreateView,
     DeleteView,
     DetailView,
@@ -11,7 +12,8 @@ from django.views.generic import (
 
 from .forms.client_forms import ClientSearchForm
 from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
-from .models import Client, Task
+from .forms.task_coment_forms import TaskCommentForm
+from .models import Client, Task, TaskComment
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -140,6 +142,10 @@ class TaskDetailView(DetailView):
     template_name = "crm/tasks/task_detail.html"
     context_object_name = "task"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comment_form"] = TaskCommentForm()
+        return context
 
 class TaskUpdateView(UpdateView):
     model = Task
@@ -154,3 +160,22 @@ class TaskDeleteView(DeleteView):
     template_name = "crm/tasks/task_confirm_delete.html"
     context_object_name = "task"
     success_url = reverse_lazy("crm:task-list")
+
+
+class TaskCommentCreateView(FormView):
+    form_class = TaskCommentForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.task = get_object_or_404(Task, pk=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.task = self.task
+        comment.author = self.request.user
+        comment.save()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("crm:task-detail", kwargs={"pk": self.task.pk})

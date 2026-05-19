@@ -96,3 +96,27 @@ class Task(models.Model):
         ordering = ("-created_at",)
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
+
+
+class TaskComment(models.Model):
+    task = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="task_comments",
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.task}"
+
+    class Meta:
+        ordering = ("created_at",)
+        verbose_name = "Task comment"
+        verbose_name_plural = "Task comments"

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Client, Task
+from .models import User, Client, Task, TaskComment
 
 
 @admin.register(User)
@@ -119,4 +119,29 @@ class TaskAdmin(admin.ModelAdmin):
 
     ordering = (
         "-due_date",
+    )
+
+
+@admin.register(TaskComment)
+class TaskCommentAdmin(admin.ModelAdmin):
+    list_display = (
+        "task",
+        "author",
+        "created_at",
+        "updated_at",
+    )
+
+    search_fields = (
+        "task__title",
+        "author__username",
+    )
+
+    list_filter = (
+        "author",
+        "created_at",
+        "updated_at",
+    )
+
+    ordering = (
+        "-created_at",
     )
