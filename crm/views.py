@@ -9,8 +9,8 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms.search_form import SearchForm
-from .forms.task_forms import TaskForm
+from .forms.client_forms import ClientSearchForm
+from .forms.task_forms import TaskForm, TaskSearchForm
 from .models import Client, Task
 
 
@@ -26,7 +26,7 @@ class ClientListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        form = SearchForm(self.request.GET)
+        form = ClientSearchForm(self.request.GET)
 
         if form.is_valid():
             query = form.cleaned_data["q"]
@@ -36,7 +36,7 @@ class ClientListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = SearchForm(self.request.GET)
+        context["search_form"] = ClientSearchForm(self.request.GET)
         return context
 
 
@@ -81,7 +81,7 @@ class TaskListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        form = SearchForm(self.request.GET)
+        form = TaskSearchForm(self.request.GET)
 
         if form.is_valid():
             query = form.cleaned_data["q"]
@@ -91,7 +91,7 @@ class TaskListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = SearchForm(self.request.GET)
+        context["search_form"] = TaskSearchForm(self.request.GET)
         return context
 
 
