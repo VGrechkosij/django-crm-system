@@ -65,6 +65,13 @@ class ClientDetailView(DetailView):
     template_name = "crm/clients/client_detail.html"
     context_object_name = "client"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tasks"] = self.object.tasks.all()
+        context["deals"] = self.object.deals.all()
+
+        return context
+
 
 class ClientUpdateView(UpdateView):
     model = Client

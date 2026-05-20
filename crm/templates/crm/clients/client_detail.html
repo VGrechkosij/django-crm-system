@@ -12,7 +12,35 @@
         <li>Created at - {{ client.created_at }}</li>
         <li>Updated at - {{ client.updated_at }}</li>
     </ul>
-    <a href="{% url 'crm:client-update' pk=client.pk %}">Update</a>
-    <a href="{% url 'crm:client-delete' pk=client.pk %}">Delete</a>
+
+    <a href="{% url 'crm:client-update' pk=client.pk %}">Update client</a>
+    <a href="{% url 'crm:client-delete' pk=client.pk %}">Delete client</a>
     <a href="{% url 'crm:client-list' %}">Back to clients</a>
+
+    <h2>Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'crm:task-detail' pk=task.pk %}">{{ task.title }}</a>
+                — {{ task.get_status_display }} / {{ task.get_priority_display }}
+            </li>
+        {% empty %}
+            <li>No tasks found</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'crm:task-create' %}">Create task </a>
+
+    <h2>Deals</h2>
+    <ul>
+        {% for deal in deals %}
+            <li>
+                <a href="{% url 'crm:deal-detail' pk=deal.pk %}">{{ deal.title }}</a>
+                — {{ deal.amount }} / {{ deal.get_status_display }}
+            </li>
+        {% empty %}
+            <li>No deals found</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'crm:deal-create' %}"> Create deal</a>
+
 {% endblock %}
