@@ -13,6 +13,11 @@ from .views import (
     TaskUpdateView,
     TaskDeleteView,
     TaskCommentCreateView,
+    DealListView,
+    DealCreateView,
+    DealDetailView,
+    DealUpdateView,
+    DealDeleteView,
 )
 
 
@@ -31,4 +36,9 @@ urlpatterns = [
     path("tasks/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
     path("tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
     path("tasks/<int:pk>/comment/create/", TaskCommentCreateView.as_view(), name="task-comment-create"),
+    path("deals/", DealListView.as_view(), name="deal-list"),
+    path("deals/create/", DealCreateView.as_view(), name="deal-create"),
+    path("deals/<int:pk>/", DealDetailView.as_view(), name="deal-detail"),
+    path("deals/<int:pk>/update/", DealUpdateView.as_view(), name="deal-update"),
+    path("deals/<int:pk>/delete/", DealDeleteView.as_view(), name="deal-delete"),
 ]

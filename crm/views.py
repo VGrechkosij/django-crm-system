@@ -13,7 +13,8 @@ from django.views.generic import (
 from .forms.client_forms import ClientSearchForm
 from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
 from .forms.task_coment_forms import TaskCommentForm
-from .models import Client, Task, TaskComment
+from .forms.deal_forms import DealSearchForm, DealForm
+from .models import Client, Task, Deal
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -179,3 +180,63 @@ class TaskCommentCreateView(FormView):
 
     def get_success_url(self):
         return reverse("crm:task-detail", kwargs={"pk": self.task.pk})
+
+
+class DealListView(ListView):
+    model = Deal
+    template_name = "crm/deals/deal_list.html"
+    context_object_name = "deals"
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_form = DealSearchForm(self.request.GET)
+
+        if search_form.is_valid():
+            query = search_form.cleaned_data["q"]
+            if query:
+                queryset = queryset.filter(client__first_name__icontains=query)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = DealSearchForm(self.request.GET)
+
+        query_params = self.request.GET.copy()
+        query_params.pop("page", None)
+        context["query_params"] = query_params.urlencode()
+
+        return context
+
+
+class DealCreateView(CreateView):
+    model = Deal
+    template_name = "crm/deals/deal_form.html"
+    context_object_name = "deal"
+    form_class = DealForm
+    success_url = reverse_lazy("crm:deal-list")
+
+    def form_valid(self, form):
+        form.instance.manager = self.request.user
+        return super().form_valid(form)
+
+
+class DealDetailView(DetailView):
+    model = Deal
+    template_name = "crm/deals/deal_detail.html"
+    context_object_name = "deal"
+
+
+class DealUpdateView(UpdateView):
+    model = Deal
+    form_class = DealForm
+    template_name = "crm/deals/deal_form.html"
+    context_object_name = "deal"
+    success_url = reverse_lazy("crm:deal-list")
+
+
+class DealDeleteView(DeleteView):
+    model = Deal
+    template_name = "crm/deals/deal_confirm_delete.html"
+    context_object_name = "deal"
+    success_url = reverse_lazy("crm:deal-list")

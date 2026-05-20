@@ -1,0 +1,14 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Delete deal</h1>
+
+    <p>Are you sure you want to delete {{ deal }}?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+
+    <a href="{% url 'crm:deal-detail' pk=deal.pk %}">Cancel</a>
+{% endblock %}

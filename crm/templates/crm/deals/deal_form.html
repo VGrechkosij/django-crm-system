@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>
-        {% if object %} Update client {% else %} Create client {% endif %}
+        {% if object %} Update deal {% else %} Create deal {% endif %}
     </h1>
 
     <form method="post">
@@ -12,5 +12,5 @@
         <button type="submit">Save</button>
     </form>
 
-    <a href="{% url 'crm:client-list' %}">Cancel</a>
+    <a href="{% url 'crm:deal-list' %}">Cancel</a>
 {% endblock %}

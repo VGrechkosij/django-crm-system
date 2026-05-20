@@ -1,0 +1,46 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Deals</h1>
+
+    <form method="get">
+        {{ search_form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>First name</th>
+            <th>Manager</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+
+        {% for deal in deals %}
+            <tr>
+                <td>
+                    <a href="{% url 'crm:deal-detail' pk=deal.pk %}">
+                        {{ deal.pk }}
+                    </a>
+                </td>
+                <td>{{ deal.title }}</td>
+                <td>{{ deal.client.first_name }}</td>
+                <td>{{ deal.manager.username }}</td>
+                <td>{{ deal.amount }}</td>
+                <td>{{ deal.status }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">No deals found</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'crm:deal-create' %}">Create deal</a>
+
+    <br>
+
+    {% include "crm/includes/pagination.html" %}
+{% endblock %}

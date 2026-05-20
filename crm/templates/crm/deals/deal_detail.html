@@ -1,0 +1,21 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Detail Deal</h1>
+
+    <ul>
+        <li>Title - {{ deal.title }}</li>
+        <li>Client - {{ deal.client }}</li>
+        <li>Manager - {{ deal.manager.username }}</li>
+        <li>Amount - {{ deal.amount }}</li>
+        <li>Status - {{ deal.get_status_display }}</li>
+        <li>Description - {{ deal.description }}</li>
+        <li>Expected close date - {{ deal.expected_close_date }}</li>
+        <li>Created at - {{ deal.created_at }}</li>
+        <li>Updated at - {{ deal.updated_at }}</li>
+    </ul>
+
+    <a href="{% url 'crm:deal-update' pk=deal.pk %}">Update</a>
+    <a href="{% url 'crm:deal-delete' pk=deal.pk %}">Delete</a>
+    <a href="{% url 'crm:deal-list' %}">Back to deals</a>
+{% endblock %}
