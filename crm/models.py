@@ -120,3 +120,41 @@ class TaskComment(models.Model):
         ordering = ("created_at",)
         verbose_name = "Task comment"
         verbose_name_plural = "Task comments"
+
+
+class Deal(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "New"
+        IN_PROGRESS = "in_progress", "In progress"
+        WON = "won", "Won"
+        LOST = "lost", "Lost"
+
+    title = models.CharField(max_length=100)
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.PROTECT,
+        related_name="deals",
+    )
+    manager = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="deals",
+    )
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
+    )
+    description = models.TextField(blank=True)
+    expected_close_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ("-created_at",)
+        verbose_name = "Deal"
+        verbose_name_plural = "Deals"

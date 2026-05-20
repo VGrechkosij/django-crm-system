@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Client, Task, TaskComment
+from .models import (
+    User,
+    Client,
+    Task,
+    TaskComment,
+    Deal,
+)
 
 
 @admin.register(User)
@@ -140,6 +146,45 @@ class TaskCommentAdmin(admin.ModelAdmin):
         "author",
         "created_at",
         "updated_at",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+
+@admin.register(Deal)
+class DealAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "client",
+        "manager",
+        "amount",
+        "status",
+        "expected_close_date",
+        "created_at",
+        "updated_at",
+    )
+
+    search_fields = (
+        "title",
+        "client__first_name",
+        "client__last_name",
+        "client__phone",
+        "client__email",
+        "client__company",
+        "manager__username",
+        "manager__email",
+        "description",
+    )
+
+    list_filter = (
+        "status",
+        "expected_close_date",
+        "created_at",
+        "updated_at",
+        "manager",
+        "client",
     )
 
     ordering = (
