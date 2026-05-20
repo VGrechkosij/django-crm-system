@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    index,
+    DashboardView,
     ClientListView,
     ClientDetailView,
     ClientUpdateView,
@@ -24,7 +24,7 @@ from .views import (
 app_name = "crm"
 
 urlpatterns = [
-    path("", index, name="index"),
+    path("", DashboardView.as_view(), name="index"),
     path("clients/", ClientListView.as_view(), name="client-list"),
     path("clients/create/", ClientCreateView.as_view(), name="client-create"),
     path("clients/<int:pk>/", ClientDetailView.as_view(), name="client-detail"),

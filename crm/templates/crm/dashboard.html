@@ -1,0 +1,13 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+
+    <ul>
+        <li>Clients: {{ clients_count }}</li>
+        <li>Tasks: {{ tasks_count }}</li>
+        <li>Open tasks: {{ open_tasks_count }}</li>
+        <li>Deals: {{ deals_count }}</li>
+        <li>Won deals: {{ won_deals_count }}</li>
+    </ul>
+{% endblock %}

@@ -1,8 +1,8 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import (
     FormView,
+    TemplateView,
     CreateView,
     DeleteView,
     DetailView,
@@ -17,8 +17,25 @@ from .forms.deal_forms import DealSearchForm, DealForm
 from .models import Client, Task, Deal
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "crm/base.html")
+class DashboardView(TemplateView):
+    template_name = "crm/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["clients_count"] = Client.objects.count()
+        context["tasks_count"] = Task.objects.count()
+        context["deals_count"] = Deal.objects.count()
+
+        context["open_tasks_count"] = Task.objects.exclude(
+            status=Task.Status.DONE
+        ).count()
+
+        context["won_deals_count"] = Deal.objects.filter(
+            status=Deal.Status.WON
+        ).count()
+
+        return context
 
 
 class ClientListView(ListView):
