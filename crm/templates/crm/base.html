@@ -18,6 +18,17 @@
             <a href="{% url 'crm:task-create' %}">Create task</a>
             <a href="{% url 'crm:deal-list' %}">Deals</a>
             <a href="{% url 'crm:deal-create' %}">Create deal</a>
+
+            {% if request.user.is_authenticated %}
+                <span>{{ request.user.username }}</span>
+
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+            {% endif %}
         </nav>
     </header>
 
