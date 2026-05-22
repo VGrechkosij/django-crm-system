@@ -16,6 +16,12 @@ from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
 from .forms.task_coment_forms import TaskCommentForm
 from .forms.deal_forms import DealSearchForm, DealForm
 from .models import Client, Task, Deal
+from .mixins import (
+    ClientPermissionMixin,
+    TaskPermissionMixin,
+    DealPermissionMixin,
+    AdminRequiredMixin,
+)
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):
@@ -39,11 +45,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ClientListView(LoginRequiredMixin, ListView):
+class ClientListView(LoginRequiredMixin, ClientPermissionMixin, ListView):
     model = Client
     template_name = "crm/clients/client_list.html"
     context_object_name = "clients"
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -78,7 +84,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ClientDetailView(LoginRequiredMixin, DetailView):
+class ClientDetailView(LoginRequiredMixin, ClientPermissionMixin, DetailView):
     model = Client
     template_name = "crm/clients/client_detail.html"
     context_object_name = "client"
@@ -91,7 +97,7 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ClientUpdateView(LoginRequiredMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin, ClientPermissionMixin, UpdateView):
     model = Client
     template_name = "crm/clients/client_form.html"
     context_object_name = "client"
@@ -99,14 +105,14 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("crm:client-list")
 
 
-class ClientDeleteView(LoginRequiredMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Client
     template_name = "crm/clients/client_confirm_delete.html"
     context_object_name = "client"
     success_url = reverse_lazy("crm:client-list")
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, TaskPermissionMixin, ListView):
     model = Task
     template_name = "crm/tasks/task_list.html"
     context_object_name = "tasks"
@@ -163,7 +169,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class TaskDetailView(LoginRequiredMixin, DetailView):
+class TaskDetailView(LoginRequiredMixin, TaskPermissionMixin, DetailView):
     model = Task
     template_name = "crm/tasks/task_detail.html"
     context_object_name = "task"
@@ -173,7 +179,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context["comment_form"] = TaskCommentForm()
         return context
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, TaskPermissionMixin, UpdateView):
     model = Task
     template_name = "crm/tasks/task_form.html"
     context_object_name = "task"
@@ -181,7 +187,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("crm:task-list")
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Task
     template_name = "crm/tasks/task_confirm_delete.html"
     context_object_name = "task"
@@ -207,7 +213,7 @@ class TaskCommentCreateView(LoginRequiredMixin, FormView):
         return reverse("crm:task-detail", kwargs={"pk": self.task.pk})
 
 
-class DealListView(LoginRequiredMixin, ListView):
+class DealListView(LoginRequiredMixin, DealPermissionMixin, ListView):
     model = Deal
     template_name = "crm/deals/deal_list.html"
     context_object_name = "deals"
@@ -246,13 +252,13 @@ class DealCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DealDetailView(LoginRequiredMixin, DetailView):
+class DealDetailView(LoginRequiredMixin, DealPermissionMixin, DetailView):
     model = Deal
     template_name = "crm/deals/deal_detail.html"
     context_object_name = "deal"
 
 
-class DealUpdateView(LoginRequiredMixin, UpdateView):
+class DealUpdateView(LoginRequiredMixin, DealPermissionMixin, UpdateView):
     model = Deal
     form_class = DealForm
     template_name = "crm/deals/deal_form.html"
@@ -260,7 +266,7 @@ class DealUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("crm:deal-list")
 
 
-class DealDeleteView(LoginRequiredMixin, DeleteView):
+class DealDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Deal
     template_name = "crm/deals/deal_confirm_delete.html"
     context_object_name = "deal"
