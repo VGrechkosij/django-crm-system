@@ -1,44 +1,99 @@
+{% load static %}
+
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Django CRM System{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'crm/css/styles.css' %}">
 </head>
 
 <body>
-    <header>
-        <nav>
-            <a href="{% url 'crm:index' %}">Home</a>
-            <a href="{% url 'crm:client-list' %}">Clients</a>
-            <a href="{% url 'crm:client-create' %}">Create client</a>
-            <a href="{% url 'crm:task-list' %}">Tasks</a>
-            <a href="{% url 'crm:task-create' %}">Create task</a>
-            <a href="{% url 'crm:deal-list' %}">Deals</a>
-            <a href="{% url 'crm:deal-create' %}">Create deal</a>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-logo">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="brand-text">CRM</span>
+            </div>
 
-            {% if request.user.is_authenticated %}
-                <span>{{ request.user.username }}</span>
+            <nav class="sidebar-nav">
+                <a href="{% url 'crm:index' %}" class="sidebar-link">
+                    <i class="bi bi-house"></i>
+                    <span>Dashboard</span>
+                </a>
 
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </nav>
-    </header>
+                <a href="{% url 'crm:client-list' %}" class="sidebar-link">
+                    <i class="bi bi-people"></i>
+                    <span>Clients</span>
+                </a>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+                <a href="{% url 'crm:task-list' %}" class="sidebar-link">
+                    <i class="bi bi-check2-square"></i>
+                    <span>Tasks</span>
+                </a>
 
-    <footer>
-        Footer
-    </footer>
+                <a href="{% url 'crm:deal-list' %}" class="sidebar-link">
+                    <i class="bi bi-briefcase"></i>
+                    <span>Deals</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                {% if request.user.is_authenticated %}
+                    <div class="user-box">
+                        <div class="user-avatar">
+                            {{ request.user.username|first|upper }}
+                        </div>
+
+                        <div>
+                            <div class="user-name">{{ request.user.username }}</div>
+                            <div class="user-role">{{ request.user.get_role_display }}</div>
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm w-100 mt-3">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-light btn-sm w-100">
+                        Login
+                    </a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <div class="main-area">
+            <header class="topbar">
+                <div>
+                    <h1 class="page-title">
+                        {% block page_title %}Dashboard{% endblock %}
+                    </h1>
+                </div>
+
+                <div class="topbar-actions">
+                    {% block topbar_actions %}
+                    {% endblock %}
+                </div>
+            </header>
+
+            <main class="page-content">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

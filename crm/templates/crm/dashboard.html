@@ -1,13 +1,121 @@
 {% extends "crm/base.html" %}
 
-{% block content %}
-    <h1>Dashboard</h1>
+{% block title %}Dashboard | Django CRM System{% endblock %}
 
-    <ul>
-        <li>Clients: {{ clients_count }}</li>
-        <li>Tasks: {{ tasks_count }}</li>
-        <li>Open tasks: {{ open_tasks_count }}</li>
-        <li>Deals: {{ deals_count }}</li>
-        <li>Won deals: {{ won_deals_count }}</li>
-    </ul>
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+    <section class="mb-4">
+        <p class="muted-text mb-4">
+            Overview of your CRM workspace.
+        </p>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <div>
+                        <div class="stat-label">Clients</div>
+                        <div class="stat-value">{{ clients_count }}</div>
+                        <div class="stat-subtitle">Total clients</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-check2-square"></i>
+                    </div>
+
+                    <div>
+                        <div class="stat-label">Tasks</div>
+                        <div class="stat-value">{{ tasks_count }}</div>
+                        <div class="stat-subtitle">Total tasks</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-clock"></i>
+                    </div>
+
+                    <div>
+                        <div class="stat-label">Open tasks</div>
+                        <div class="stat-value">{{ open_tasks_count }}</div>
+                        <div class="stat-subtitle">Not completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-briefcase"></i>
+                    </div>
+
+                    <div>
+                        <div class="stat-label">Deals</div>
+                        <div class="stat-value">{{ deals_count }}</div>
+                        <div class="stat-subtitle">Total deals</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+
+                    <div>
+                        <div class="stat-label">Won deals</div>
+                        <div class="stat-value">{{ won_deals_count }}</div>
+                        <div class="stat-subtitle">Successful deals</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="crm-card">
+        <h2 class="section-title">Quick actions</h2>
+
+        <div class="quick-actions">
+            <a href="{% url 'crm:client-create' %}" class="btn btn-dark">
+                <i class="bi bi-plus-lg"></i>
+                New client
+            </a>
+
+            <a href="{% url 'crm:task-create' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-plus-lg"></i>
+                New task
+            </a>
+
+            <a href="{% url 'crm:deal-create' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-plus-lg"></i>
+                New deal
+            </a>
+
+            <a href="{% url 'crm:client-list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-list-ul"></i>
+                View clients
+            </a>
+
+            <a href="{% url 'crm:task-list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-list-check"></i>
+                View tasks
+            </a>
+
+            <a href="{% url 'crm:deal-list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-briefcase"></i>
+                View deals
+            </a>
+        </div>
+    </section>
 {% endblock %}

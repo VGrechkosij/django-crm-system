@@ -1,16 +1,30 @@
 {% extends "crm/base.html" %}
 
+{% block title %}
+    {% if object %}Update task{% else %}Create task{% endif %} | Django CRM System
+{% endblock %}
+
+{% block page_title %}
+    {% if object %}Update task{% else %}Create task{% endif %}
+{% endblock %}
+
 {% block content %}
-    <h1>
-        {% if object %} Update task {% else %} Create task {% endif %}
-    </h1>
+    <section class="crm-card">
+        <form method="post">
+            {% csrf_token %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+            {{ form.as_p }}
 
-        <button type="submit">Save</button>
-    </form>
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-check2"></i>
+                    Save
+                </button>
 
-    <a href="{% url 'crm:task-list' %}">Cancel</a>
+                <a href="{% url 'crm:task-list' %}" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
 {% endblock %}
