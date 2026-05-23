@@ -82,6 +82,10 @@
                 </div>
 
                 <div class="topbar-actions">
+                    <button type="button" class="theme-toggle-btn" id="themeToggleBtn">
+                        <i class="bi bi-moon" id="themeToggleIcon"></i>
+                    </button>
+
                     {% block topbar_actions %}
                     {% endblock %}
                 </div>
@@ -95,5 +99,39 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+        const themeToggleIcon = document.getElementById("themeToggleIcon");
+        const htmlElement = document.documentElement;
+
+        const savedTheme = localStorage.getItem("crm-theme");
+
+        if (savedTheme) {
+            htmlElement.setAttribute("data-bs-theme", savedTheme);
+        }
+
+        function updateThemeIcon() {
+            const currentTheme = htmlElement.getAttribute("data-bs-theme");
+
+            if (currentTheme === "dark") {
+                themeToggleIcon.className = "bi bi-moon";
+            } else {
+                themeToggleIcon.className = "bi bi-sun";
+            }
+        }
+
+        updateThemeIcon();
+
+        themeToggleBtn.addEventListener("click", function () {
+            const currentTheme = htmlElement.getAttribute("data-bs-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+            htmlElement.setAttribute("data-bs-theme", newTheme);
+            localStorage.setItem("crm-theme", newTheme);
+
+            updateThemeIcon();
+        });
+    </script>
 </body>
 </html>
