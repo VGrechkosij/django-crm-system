@@ -6,5 +6,5 @@ class ClientSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="Search",
-        widget=forms.TextInput(attrs={"placeholder": "Search"})
+        widget=forms.TextInput(attrs={"placeholder": "Search by name, email, phone, company, manager"})
     )

@@ -1,0 +1,38 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Delete comment | Django CRM System{% endblock %}
+
+{% block page_title %}Delete comment{% endblock %}
+
+{% block content %}
+    <section class="crm-card">
+        <div class="mb-4">
+            <h2 class="section-title mb-2">
+                Are you sure?
+            </h2>
+
+            <p class="muted-text mb-0">
+                You are going to delete this comment:
+            </p>
+
+            <p class="mt-3 mb-0">
+                <strong>{{ task_comment.text }}</strong>
+            </p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-trash"></i>
+                    Delete
+                </button>
+
+                <a href="{% url 'crm:task-detail' pk=task_comment.task.pk %}" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

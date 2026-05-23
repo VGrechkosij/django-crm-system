@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.db.models import Q
 from django.views.generic import (
     FormView,
     TemplateView,
@@ -15,12 +16,13 @@ from .forms.client_forms import ClientSearchForm
 from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
 from .forms.task_coment_forms import TaskCommentForm
 from .forms.deal_forms import DealSearchForm, DealForm
-from .models import Client, Task, Deal
+from .models import Client, Task, Deal, TaskComment
 from .mixins import (
     ClientPermissionMixin,
     TaskPermissionMixin,
     DealPermissionMixin,
     AdminRequiredMixin,
+    CommentPermissionMixin,
 )
 
 
@@ -58,7 +60,14 @@ class ClientListView(LoginRequiredMixin, ClientPermissionMixin, ListView):
         if form.is_valid():
             query = form.cleaned_data["q"]
             if query:
-                queryset = queryset.filter(first_name__icontains=query)
+                queryset = queryset.filter(
+                    Q(first_name__icontains=query)
+                    | Q(last_name__icontains=query)
+                    | Q(email__icontains=query)
+                    | Q(phone__icontains=query)
+                    | Q(company__icontains=query)
+                    | Q(manager__username__icontains=query)
+                )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -127,7 +136,11 @@ class TaskListView(LoginRequiredMixin, TaskPermissionMixin, ListView):
             query = search_form.cleaned_data["q"]
 
             if query:
-                queryset = queryset.filter(assigned_to__username__icontains=query)
+                queryset = queryset.filter(
+                    Q(title__icontains=query)
+                    | Q(client__first_name__icontains=query)
+                    | Q(client__last_name__icontains=query)
+                )
 
         if filter_form.is_valid():
             status = filter_form.cleaned_data["status"]
@@ -179,6 +192,7 @@ class TaskDetailView(LoginRequiredMixin, TaskPermissionMixin, DetailView):
         context["comment_form"] = TaskCommentForm()
         return context
 
+
 class TaskUpdateView(LoginRequiredMixin, TaskPermissionMixin, UpdateView):
     model = Task
     template_name = "crm/tasks/task_form.html"
@@ -213,6 +227,25 @@ class TaskCommentCreateView(LoginRequiredMixin, FormView):
         return reverse("crm:task-detail", kwargs={"pk": self.task.pk})
 
 
+class TaskCommentUpdateView(LoginRequiredMixin, CommentPermissionMixin, UpdateView):
+    model = TaskComment
+    form_class = TaskCommentForm
+    template_name = "crm/tasks/comment_form.html"
+    context_object_name = "task_comment"
+
+    def get_success_url(self):
+        return reverse("crm:task-detail",  kwargs={"pk": self.object.task.pk})
+
+
+class TaskCommentDeleteView(LoginRequiredMixin, CommentPermissionMixin, DeleteView):
+    model = TaskComment
+    template_name = "crm/tasks/comment_confirm_delete.html"
+    context_object_name = "task_comment"
+
+    def get_success_url(self):
+        return reverse("crm:task-detail",  kwargs={"pk": self.object.task.pk})
+
+
 class DealListView(LoginRequiredMixin, DealPermissionMixin, ListView):
     model = Deal
     template_name = "crm/deals/deal_list.html"
@@ -226,7 +259,13 @@ class DealListView(LoginRequiredMixin, DealPermissionMixin, ListView):
         if search_form.is_valid():
             query = search_form.cleaned_data["q"]
             if query:
-                queryset = queryset.filter(client__first_name__icontains=query)
+                queryset = queryset.filter(
+                    Q(title__icontains=query)
+                    | Q(client__first_name__icontains=query)
+                    | Q(client__last_name__icontains=query)
+                    | Q(manager__username__icontains=query)
+                    | Q(status__icontains=query)
+                )
         return queryset
 
     def get_context_data(self, **kwargs):

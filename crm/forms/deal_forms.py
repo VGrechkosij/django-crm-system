@@ -9,7 +9,7 @@ class DealSearchForm(forms.Form):
         required=False,
         label="Search",
         widget=forms.TextInput(
-            attrs={"placeholder": "Search"}
+            attrs={"placeholder": "Search by deal, client, manager, status"}
         )
     )
 
