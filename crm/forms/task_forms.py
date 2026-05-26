@@ -32,7 +32,11 @@ class TaskSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="Search",
-        widget=forms.TextInput(attrs={"placeholder": "Search by title, client"})
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Search by title, client"
+            }
+        )
     )
 
 

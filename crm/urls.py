@@ -29,20 +29,60 @@ urlpatterns = [
     path("", DashboardView.as_view(), name="index"),
     path("clients/", ClientListView.as_view(), name="client-list"),
     path("clients/create/", ClientCreateView.as_view(), name="client-create"),
-    path("clients/<int:pk>/", ClientDetailView.as_view(), name="client-detail"),
-    path("clients/<int:pk>/update/", ClientUpdateView.as_view(), name="client-update"),
-    path("clients/<int:pk>/delete/", ClientDeleteView.as_view(), name="client-delete"),
+    path(
+        "clients/<int:pk>/",
+        ClientDetailView.as_view(),
+        name="client-detail"
+    ),
+    path(
+        "clients/<int:pk>/update/",
+        ClientUpdateView.as_view(),
+        name="client-update"
+    ),
+    path(
+        "clients/<int:pk>/delete/",
+        ClientDeleteView.as_view(),
+        name="client-delete"
+    ),
     path("tasks/", TaskListView.as_view(), name="task-list"),
     path("tasks/create/", TaskCreateView.as_view(), name="task-create"),
     path("tasks/<int:pk>/", TaskDetailView.as_view(), name="task-detail"),
-    path("tasks/<int:pk>/update/", TaskUpdateView.as_view(), name="task-update"),
-    path("tasks/<int:pk>/delete/", TaskDeleteView.as_view(), name="task-delete"),
-    path("tasks/<int:pk>/comment/create/", TaskCommentCreateView.as_view(), name="task-comment-create"),
-    path("comments/<int:pk>/update/", TaskCommentUpdateView.as_view(), name="task-comment-update"),
-    path("comments/<int:pk>/delete/", TaskCommentDeleteView.as_view(), name="task-comment-delete"),
+    path(
+        "tasks/<int:pk>/update/",
+        TaskUpdateView.as_view(),
+        name="task-update"
+    ),
+    path(
+        "tasks/<int:pk>/delete/",
+        TaskDeleteView.as_view(),
+        name="task-delete"
+    ),
+    path(
+        "tasks/<int:pk>/comment/create/",
+        TaskCommentCreateView.as_view(),
+        name="task-comment-create"
+    ),
+    path(
+        "comments/<int:pk>/update/",
+        TaskCommentUpdateView.as_view(),
+        name="task-comment-update"
+    ),
+    path(
+        "comments/<int:pk>/delete/",
+        TaskCommentDeleteView.as_view(),
+        name="task-comment-delete"
+    ),
     path("deals/", DealListView.as_view(), name="deal-list"),
     path("deals/create/", DealCreateView.as_view(), name="deal-create"),
     path("deals/<int:pk>/", DealDetailView.as_view(), name="deal-detail"),
-    path("deals/<int:pk>/update/", DealUpdateView.as_view(), name="deal-update"),
-    path("deals/<int:pk>/delete/", DealDeleteView.as_view(), name="deal-delete"),
+    path(
+        "deals/<int:pk>/update/",
+        DealUpdateView.as_view(),
+        name="deal-update"
+    ),
+    path(
+        "deals/<int:pk>/delete/",
+        DealDeleteView.as_view(),
+        name="deal-delete"
+    ),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.views.generic import (
     FormView,
     TemplateView,
@@ -54,7 +54,7 @@ class ClientListView(LoginRequiredMixin, ClientPermissionMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().select_related("manager")
         form = ClientSearchForm(self.request.GET)
 
         if form.is_valid():
@@ -98,10 +98,20 @@ class ClientDetailView(LoginRequiredMixin, ClientPermissionMixin, DetailView):
     template_name = "crm/clients/client_detail.html"
     context_object_name = "client"
 
+    def get_queryset(self):
+        return super().get_queryset().select_related("manager")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tasks"] = self.object.tasks.all()
-        context["deals"] = self.object.deals.all()
+
+        context["tasks"] = self.object.tasks.select_related(
+            "created_by",
+            "assigned_to",
+        )
+
+        context["deals"] = self.object.deals.select_related(
+            "manager",
+        )
 
         return context
 
@@ -128,7 +138,11 @@ class TaskListView(LoginRequiredMixin, TaskPermissionMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().select_related(
+            "client",
+            "created_by",
+            "assigned_to",
+        )
         search_form = TaskSearchForm(self.request.GET)
         filter_form = TaskFilterForm(self.request.GET)
 
@@ -187,9 +201,22 @@ class TaskDetailView(LoginRequiredMixin, TaskPermissionMixin, DetailView):
     template_name = "crm/tasks/task_detail.html"
     context_object_name = "task"
 
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            "client",
+            "created_by",
+            "assigned_to",
+        ).prefetch_related(
+            Prefetch(
+                "comments",
+                queryset=TaskComment.objects.select_related("author"),
+            )
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["comment_form"] = TaskCommentForm()
+
         return context
 
 
@@ -227,7 +254,11 @@ class TaskCommentCreateView(LoginRequiredMixin, FormView):
         return reverse("crm:task-detail", kwargs={"pk": self.task.pk})
 
 
-class TaskCommentUpdateView(LoginRequiredMixin, CommentPermissionMixin, UpdateView):
+class TaskCommentUpdateView(
+    LoginRequiredMixin,
+    CommentPermissionMixin,
+    UpdateView,
+):
     model = TaskComment
     form_class = TaskCommentForm
     template_name = "crm/tasks/comment_form.html"
@@ -237,7 +268,11 @@ class TaskCommentUpdateView(LoginRequiredMixin, CommentPermissionMixin, UpdateVi
         return reverse("crm:task-detail",  kwargs={"pk": self.object.task.pk})
 
 
-class TaskCommentDeleteView(LoginRequiredMixin, CommentPermissionMixin, DeleteView):
+class TaskCommentDeleteView(
+    LoginRequiredMixin,
+    CommentPermissionMixin,
+    DeleteView,
+):
     model = TaskComment
     template_name = "crm/tasks/comment_confirm_delete.html"
     context_object_name = "task_comment"
@@ -253,7 +288,10 @@ class DealListView(LoginRequiredMixin, DealPermissionMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().select_related(
+            "client",
+            "manager",
+        )
         search_form = DealSearchForm(self.request.GET)
 
         if search_form.is_valid():
@@ -295,6 +333,12 @@ class DealDetailView(LoginRequiredMixin, DealPermissionMixin, DetailView):
     model = Deal
     template_name = "crm/deals/deal_detail.html"
     context_object_name = "deal"
+
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            "client",
+            "manager",
+        )
 
 
 class DealUpdateView(LoginRequiredMixin, DealPermissionMixin, UpdateView):

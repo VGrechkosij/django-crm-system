@@ -339,7 +339,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.admin)
 
         response = self.client.get(
-            reverse("crm:task-comment-update", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-update",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 200)
@@ -348,7 +351,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.author)
 
         response = self.client.get(
-            reverse("crm:task-comment-update", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-update",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 200)
@@ -357,7 +363,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.other_user)
 
         response = self.client.get(
-            reverse("crm:task-comment-update", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-update",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 404)
@@ -366,7 +375,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.admin)
 
         response = self.client.get(
-            reverse("crm:task-comment-delete", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-delete",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 200)
@@ -375,7 +387,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.author)
 
         response = self.client.get(
-            reverse("crm:task-comment-delete", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-delete",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 200)
@@ -384,7 +399,10 @@ class CommentPermissionTest(TestCase):
         self.client.force_login(self.other_user)
 
         response = self.client.get(
-            reverse("crm:task-comment-delete", kwargs={"pk": self.task_comment.pk})
+            reverse(
+                "crm:task-comment-delete",
+                kwargs={"pk": self.task_comment.pk}
+            )
         )
 
         self.assertEqual(response.status_code, 404)
