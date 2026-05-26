@@ -54,17 +54,6 @@ class DealPermissionMixin:
         return queryset
 
 
-class AdminRequiredMixin:
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        user = self.request.user
-
-        if user.role == user.Role.ADMIN:
-            return queryset
-
-        return queryset.none()
-
-
 class CommentPermissionMixin:
     def get_queryset(self):
         queryset = super().get_queryset()
