@@ -12,12 +12,12 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms.client_forms import ClientSearchForm
-from .forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
-from .forms.task_comment_forms import TaskCommentForm
-from .forms.deal_forms import DealSearchForm, DealForm
-from .models import Client, Task, Deal, TaskComment
-from .mixins import (
+from crm.forms.client_forms import ClientSearchForm
+from crm.forms.task_forms import TaskForm, TaskSearchForm, TaskFilterForm
+from crm.forms.task_comment_forms import TaskCommentForm
+from crm.forms.deal_forms import DealSearchForm, DealForm
+from crm.models import Client, Task, Deal, TaskComment
+from crm.mixins import (
     ClientPermissionMixin,
     TaskPermissionMixin,
     DealPermissionMixin,
