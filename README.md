@@ -2,7 +2,7 @@
 
 Django CRM System is a web application for managing clients, tasks, deals, and task comments.
 
-The main focus of this project is backend development with Django: models, relationships, CRUD operations, authentication, role-based permissions, search, filtering, tests, code quality, and database query optimization.
+The main focus of this project is backend development with Django: models, relationships, CRUD operations, authentication, role-based permissions, search, filtering, tests, code quality, deployment, and database query optimization.
 
 ---
 
@@ -20,6 +20,27 @@ The main focus of this project is backend development with Django: models, relat
 - Query optimization with `select_related` and `prefetch_related`
 - Tests for core backend logic
 - Flake8 code quality checks
+- Deployment on Render
+- PostgreSQL database on Neon
+
+---
+
+## Live Demo
+
+Live project:
+
+https://django-crm-system.onrender.com
+
+Demo user:
+
+```text
+username: demo_manager
+password: demo12345
+```
+
+The demo user has a Manager role and can be used to test the main CRM functionality.
+
+> Admin credentials are not public for security reasons.
 
 ---
 
@@ -61,7 +82,12 @@ The main focus of this project is backend development with Django: models, relat
 
 - Python
 - Django
-- SQLite
+- SQLite for local development
+- PostgreSQL for production
+- Neon PostgreSQL
+- Render
+- Gunicorn
+- WhiteNoise
 - HTML
 - CSS
 - Bootstrap 5
@@ -118,6 +144,7 @@ django-crm-system/
 │   ├── urls.py
 │   └── views.py
 │
+├── build.sh
 ├── manage.py
 ├── requirements.txt
 └── README.md
@@ -145,6 +172,15 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Create a local `.env` file in the project root:
+
+```env
+SECRET_KEY=django-insecure-local-development-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+CSRF_TRUSTED_ORIGINS=
 ```
 
 Apply migrations and create a superuser:
@@ -231,6 +267,43 @@ This helps reduce unnecessary database queries when rendering related objects in
 
 ---
 
+## Deployment
+
+The project is deployed on Render and uses a Neon PostgreSQL database in production.
+
+Production configuration includes:
+
+- Environment variables for sensitive settings
+- `DEBUG=False`
+- PostgreSQL database through `DATABASE_URL`
+- Static files served with WhiteNoise
+- Gunicorn as a production WSGI server
+- Automatic migrations during deployment
+
+Render build command:
+
+```bash
+./build.sh
+```
+
+Render start command:
+
+```bash
+gunicorn config.wsgi:application
+```
+
+Required production environment variables:
+
+```text
+SECRET_KEY
+DEBUG
+ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS
+DATABASE_URL
+```
+
+---
+
 ## Future Improvements
 
 Planned improvements:
@@ -238,9 +311,7 @@ Planned improvements:
 - Add Django REST Framework API
 - Add JWT authentication
 - Add Swagger/OpenAPI documentation
-- Add PostgreSQL
 - Add Docker
-- Add deployment configuration
 - Add API tests
 - Add CI/CD pipeline
 
