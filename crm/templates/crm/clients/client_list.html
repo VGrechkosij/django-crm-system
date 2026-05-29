@@ -1,0 +1,77 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Clients | Django CRM System{% endblock %}
+
+{% block page_title %}Clients{% endblock %}
+
+{% block topbar_actions %}
+    <a href="{% url 'crm:client-create' %}" class="btn btn-dark btn-sm">
+        <i class="bi bi-plus-lg"></i>
+        New client
+    </a>
+{% endblock %}
+
+{% block content %}
+    <section class="crm-card mb-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-12 col-md-8 col-lg-6">
+                {{ search_form.q.label_tag }}
+                {{ search_form.q }}
+            </div>
+
+            <div class="col-12 col-md-auto">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i>
+                    Search
+                </button>
+            </div>
+
+            <div class="col-12 col-md-auto">
+                <a href="{% url 'crm:client-list' %}" class="btn btn-outline-secondary">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-wrapper">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Company</th>
+                    <th>Manager</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for client in clients %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'crm:client-detail' pk=client.pk %}" class="table-link">
+                                {{ client.first_name }} {{ client.last_name }}
+                            </a>
+                        </td>
+
+                        <td>{{ client.email|default:"—" }}</td>
+                        <td>{{ client.phone }}</td>
+                        <td>{{ client.company|default:"—" }}</td>
+                        <td>{{ client.manager.username }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center muted-text py-4">
+                            No clients found
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <div class="mt-4">
+        {% include "crm/includes/pagination.html" %}
+    </div>
+{% endblock %}

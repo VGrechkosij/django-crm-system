@@ -1,0 +1,36 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Update comment | Django CRM System{% endblock %}
+
+{% block page_title %}Update comment{% endblock %}
+
+{% block content %}
+    <section class="crm-card">
+        <div class="mb-4">
+            <h2 class="section-title mb-2">
+                Edit comment
+            </h2>
+
+            <p class="muted-text mb-0">
+                Update your comment and save changes.
+            </p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-check2"></i>
+                    Save
+                </button>
+
+                <a href="{% url 'crm:task-detail' pk=task_comment.task.pk %}" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

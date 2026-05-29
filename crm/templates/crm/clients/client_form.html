@@ -1,0 +1,30 @@
+{% extends "crm/base.html" %}
+
+{% block title %}
+    {% if object %}Update client{% else %}Create client{% endif %} | Django CRM System
+{% endblock %}
+
+{% block page_title %}
+    {% if object %}Update client{% else %}Create client{% endif %}
+{% endblock %}
+
+{% block content %}
+    <section class="crm-card">
+        <form method="post">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-check2"></i>
+                    Save
+                </button>
+
+                <a href="{% url 'crm:client-list' %}" class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

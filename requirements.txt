@@ -1,4 +1,14 @@
 asgiref==3.11.1
+dj-database-url==3.1.2
 Django==5.2.14
+flake8==7.3.0
+gunicorn==26.0.0
+mccabe==0.7.0
+packaging==26.2
+psycopg2-binary==2.9.12
+pycodestyle==2.14.0
+pyflakes==3.4.0
+python-dotenv==1.2.2
 sqlparse==0.5.5
 typing_extensions==4.15.0
+whitenoise==6.12.0

@@ -1,0 +1,85 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Deals | Django CRM System{% endblock %}
+
+{% block page_title %}Deals{% endblock %}
+
+{% block topbar_actions %}
+    <a href="{% url 'crm:deal-create' %}" class="btn btn-dark btn-sm">
+        <i class="bi bi-plus-lg"></i>
+        New deal
+    </a>
+{% endblock %}
+
+{% block content %}
+    <section class="crm-card mb-4">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-12 col-md-8 col-lg-6">
+                {{ search_form.q.label_tag }}
+                {{ search_form.q }}
+            </div>
+
+            <div class="col-12 col-md-auto">
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="bi bi-search"></i>
+                    Search
+                </button>
+            </div>
+
+            <div class="col-12 col-md-auto">
+                <a href="{% url 'crm:deal-list' %}" class="btn btn-outline-secondary">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-wrapper">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Deal</th>
+                    <th>Client</th>
+                    <th>Manager</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Expected close date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for deal in deals %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'crm:deal-detail' pk=deal.pk %}" class="table-link">
+                                {{ deal.title }}
+                            </a>
+                        </td>
+
+                        <td>{{ deal.client }}</td>
+                        <td>{{ deal.manager.username }}</td>
+                        <td>{{ deal.amount }}</td>
+
+                        <td>
+                            <span class="badge-soft badge-deal-status-{{ deal.status }}">
+                                {{ deal.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td>{{ deal.expected_close_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center muted-text py-4">
+                            No deals found
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <div class="mt-4">
+        {% include "crm/includes/pagination.html" %}
+    </div>
+{% endblock %}

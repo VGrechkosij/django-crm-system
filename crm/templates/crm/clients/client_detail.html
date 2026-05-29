@@ -1,0 +1,184 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Client detail | Django CRM System{% endblock %}
+
+{% block page_title %}Client detail{% endblock %}
+
+{% block topbar_actions %}
+    <a href="{% url 'crm:client-update' pk=client.pk %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-pencil"></i>
+        Edit
+    </a>
+
+    <a href="{% url 'crm:client-delete' pk=client.pk %}" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-trash"></i>
+        Delete
+    </a>
+{% endblock %}
+
+{% block content %}
+    <section class="crm-card mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <h2 class="section-title mb-1">
+                    {{ client.first_name }} {{ client.last_name }}
+                </h2>
+
+                <p class="muted-text mb-0">
+                    {{ client.company|default:"No company" }}
+                </p>
+            </div>
+
+            <a href="{% url 'crm:client-list' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i>
+                Back to clients
+            </a>
+        </div>
+
+        <ul class="detail-list">
+            <li>
+                <div class="detail-label">First name</div>
+                <div class="detail-value">{{ client.first_name }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Last name</div>
+                <div class="detail-value">{{ client.last_name|default:"—" }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Email</div>
+                <div class="detail-value">{{ client.email|default:"—" }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Phone</div>
+                <div class="detail-value">{{ client.phone }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Company</div>
+                <div class="detail-value">{{ client.company|default:"—" }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Manager</div>
+                <div class="detail-value">{{ client.manager.username }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Created at</div>
+                <div class="detail-value">{{ client.created_at }}</div>
+            </li>
+
+            <li>
+                <div class="detail-label">Updated at</div>
+                <div class="detail-value">{{ client.updated_at }}</div>
+            </li>
+        </ul>
+    </section>
+
+    <div class="row g-4">
+        <div class="col-12 col-xl-6">
+            <section class="crm-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="section-title mb-0">Tasks</h2>
+
+                    <a href="{% url 'crm:task-create' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-plus-lg"></i>
+                        New task
+                    </a>
+                </div>
+
+                {% if tasks %}
+                    <div class="table-wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for task in tasks %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'crm:task-detail' pk=task.pk %}" class="table-link">
+                                                {{ task.title }}
+                                            </a>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge-soft badge-status-{{ task.status }}">
+                                                {{ task.get_status_display }}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="badge-soft badge-priority-{{ task.priority }}">
+                                                {{ task.get_priority_display }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="muted-text mb-0">No tasks found</p>
+                {% endif %}
+            </section>
+        </div>
+
+        <div class="col-12 col-xl-6">
+            <section class="crm-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="section-title mb-0">Deals</h2>
+
+                    <a href="{% url 'crm:deal-create' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-plus-lg"></i>
+                        New deal
+                    </a>
+                </div>
+
+                {% if deals %}
+                    <div class="table-wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Deal</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for deal in deals %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'crm:deal-detail' pk=deal.pk %}" class="table-link">
+                                                {{ deal.title }}
+                                            </a>
+                                        </td>
+
+                                        <td>{{ deal.amount }}</td>
+
+                                        <td>
+                                            <span class="badge-soft badge-deal-status-{{ deal.status }}">
+                                                {{ deal.get_status_display }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="muted-text mb-0">No deals found</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock %}
